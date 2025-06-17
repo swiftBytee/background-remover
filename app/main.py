@@ -6,7 +6,12 @@ import torch
 import io
 import os
 os.environ["OMP_NUM_THREADS"] = "1"
-os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1" 
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32"
+
+from flask import Flask, request, send_file
+# ... rest of your existing code ...
 # Force CPU usage for free tier
 device = torch.device("cpu")
 model = AutoModel.from_pretrained("PramaLLC/BEN2").to(device).eval()
