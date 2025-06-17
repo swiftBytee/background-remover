@@ -5,7 +5,7 @@ apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python packages with exact versions
+# Install Python packages
 python -m pip install --upgrade pip
 pip install --no-cache-dir -r requirements.txt
 
