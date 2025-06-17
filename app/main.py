@@ -5,9 +5,8 @@ from PIL import Image
 import torch
 import io
 import os
-os.environ["OMP_NUM_THREADS"] = "1"  # Reduces memory usage
-os.environ["MKL_NUM_THREADS"] = "1"  # Reduces memory usage
-
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
 # Force CPU usage for free tier
 device = torch.device("cpu")
 model = AutoModel.from_pretrained("PramaLLC/BEN2").to(device).eval()
