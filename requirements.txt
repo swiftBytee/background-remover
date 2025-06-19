@@ -1,16 +1,5 @@
-# --extra-index-url https://download.pytorch.org/whl/cpu
-# torch==2.5.1+cpu
-# torchvision==0.22.1+cpu
-# flask==2.3.2
-# flask-cors==4.0.0
-# pillow==10.3.0
-# git+https://github.com/PramaLLC/BEN2.git
-# gunicorn==21.2.0
-
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.5.1+cpu
-torchvision==0.22.1+cpu
-flask==2.3.2
-flask-cors==4.0.0
-pillow==10.3.0
-git+https://github.com/PramaLLC/BEN2.git
+fastapi
+uvicorn
+transformers
+torch
+    
