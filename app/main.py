@@ -3,19 +3,30 @@ from pydantic import BaseModel
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import StreamingResponse
+from ben2 import BEN_Base
+from PIL import Image
+import io, torch
+
 app = FastAPI()
 
-model_name = "PramaLLC/BEN2"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSequenceClassification.from_pretrained(model_name)
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = BEN_Base.from_pretrained("PramaLLC/BEN2").to(device).eval()
 
-class Input(BaseModel):
-    text: str
+# ✅ Home route
+@app.get("/")
+def home():
+    return {"message": "You are connected"}
 
-@app.post("/predict")
-def predict(input: Input):
-    inputs = tokenizer(input.text, return_tensors="pt", truncation=True, padding=True)
-    with torch.no_grad():
-        outputs = model(**inputs)
-        probs = torch.nn.functional.softmax(outputs.logits, dim=-1)
-    return {"probabilities": probs.tolist()}
+# 🎯 Background removal route
+@app.post("/remove-bg")
+async def remove_bg(file: UploadFile = File(...)):
+    data = await file.read()
+    img = Image.open(io.BytesIO(data)).convert("RGB")
+    fg = model.inference(img, refine_foreground=False)
+    buf = io.BytesIO()
+    fg.save(buf, format="PNG")
+    buf.seek(0)
+    return StreamingResponse(buf, media_type="image/png")
+
